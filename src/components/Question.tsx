@@ -13,7 +13,7 @@ export default function Question( {question, options, correctAnswer, selectedAns
         <>
             <form>
                 <h2 className="font-bold text-blue-950 text-xl ">{question}</h2>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                     {options.map((option, index) => { 
                         const isCorrect = option === correctAnswer
                         const isSelected = option === selectedAnswer
@@ -46,7 +46,7 @@ export default function Question( {question, options, correctAnswer, selectedAns
                         )
                     })}
                 </div>
-                <hr className="w-170 opacity-25 m-2"></hr>
+                <hr className="w-full opacity-25 m-2"></hr>
             </form>
         </>
     )
