@@ -27,6 +27,7 @@ export default function Quiz(){
                 const data = await res.json()
                 const newQuestions = data.results.map((question: QuestionData) => ({
                     ...question,
+                    // Combine all answers and randomize their order
                     options: [...question.incorrect_answers, question.correct_answer]
                         .sort(() => Math.random() - 0.5)
                 }))
@@ -41,6 +42,7 @@ export default function Quiz(){
         getData()
     }, [quizKey])
     
+    // Update the selected answer at the corresponding question index
     function selectAnswer(index: number, answer: string) {
         setAnswers(prevAnswers => {
             const newAnswers = [...prevAnswers]
@@ -49,6 +51,7 @@ export default function Quiz(){
         })
     }
 
+    // Count the answers that match the correct answers
     function checkAnswers() {
         return questions.filter((question, index) => question.correct_answer === answers[index]).length
     }
