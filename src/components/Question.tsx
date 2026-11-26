@@ -1,28 +1,53 @@
-import { useState } from 'react'
-
 type QuestionProps = {
     question: string,
     options: string[],
-    correctAnswer: string
+    correctAnswer: string,
+    selectedAnswer: string,
+    onSelect: (answer: string) => void,
+    hasChecked: boolean
 }
 
-export default function Question( {question, options, correctAnswer}: QuestionProps){
-    const [selectedAnswer, setSelectedAnswer] = useState("")
+export default function Question( {question, options, correctAnswer, selectedAnswer, onSelect, hasChecked}: QuestionProps){
 
     return (
         <>
             <form>
-                <h2>{question}</h2>
+                <h2 className="font-bold text-blue-950 text-xl ">{question}</h2>
                 <div className="flex gap-2">
-                    {options.map((option, index) => (
-                        <label key={index} className="flex gap-2">
-                            <input className='' type="radio" name="answer" value={option} checked={selectedAnswer === option} onChange={() => setSelectedAnswer(option)} />
-                            {option}
-                        </label>
-                    ))}
+                    {options.map((option, index) => { 
+                        const isCorrect = option === correctAnswer
+                        const isSelected = option === selectedAnswer
+                        let answerClass = ""
+
+                        if (hasChecked && isCorrect){
+                            answerClass = "bg-green-200 font-bold border-none"
+                        } else if (hasChecked && isSelected){
+                            answerClass = "bg-red-200 opacity-50 border-none"
+                        }
+                        if (!hasChecked && isSelected) {
+                            answerClass = "bg-blue-200 border-none "
+                        }
+                        
+                        return (
+                            <label key={index} className="flex m-2">
+                                <input 
+                                    className='sr-only peer' 
+                                    type="radio" 
+                                    name={`answer-${question}`} 
+                                    value={option} 
+                                    checked={selectedAnswer === option} 
+                                    onChange={() => onSelect(option)} 
+                                    disabled={hasChecked}
+                                />
+                                <span className={`block border border-blue-950 rounded-lg px-4 py-2 hover:bg-blue-100  ${answerClass}`}>
+                                    {option}
+                                </span>
+                            </label>
+                        )
+                    })}
                 </div>
+                <hr className="w-170 opacity-25 m-2"></hr>
             </form>
-            <button onClick={() => alert(selectedAnswer === correctAnswer ? "Correct!" : "Incorrect!")} className="bg-blue-900 transition-colors duration-300 ease-in-out hover:bg-indigo-600 hover:scale-105 text-white text-xl font-bold py-4 px-8 rounded cursor-pointer shadow-md">Check answers</button>
         </>
     )
 }
